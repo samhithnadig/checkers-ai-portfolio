@@ -62,3 +62,23 @@ def test_random_playouts_do_not_crash():
             assert moves
             s.apply(random.choice(moves))
         assert s.winner is not None or s.draw
+
+def test_initial_position_is_counted_for_threefold_repetition():
+    board=np.zeros((8,8),dtype=np.int8)
+    board[5,0]=2
+    board[2,7]=-2
+    state=GameState(board,RED)
+
+    cycle=[
+        ((5,0),(4,1)),
+        ((2,7),(3,6)),
+        ((4,1),(5,0)),
+        ((3,6),(2,7)),
+    ]
+    assert state.history[state.position_key()] == 1
+    for _ in range(2):
+        for start,end in cycle:
+            move=next(m for m in state.legal_moves() if m.start==start and m.end==end)
+            state.apply(move)
+    assert state.draw
+    assert state.history[state.position_key()] == 3
