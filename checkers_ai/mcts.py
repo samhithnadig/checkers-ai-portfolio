@@ -14,6 +14,13 @@ class MCTS:
     def __init__(self, model, simulations=64, c_puct=1.4, device="cpu"):
         self.model=model; self.simulations=simulations; self.c_puct=c_puct; self.device=device
 
+    @staticmethod
+    def _selection_score(child, parent_visits, c_puct):
+        # Child Q is stored from the child's side-to-move perspective.
+        # The parent therefore sees the negated value.
+        exploration = c_puct * child.prior * math.sqrt(max(1, parent_visits)) / (1 + child.visits)
+        return -child.q + exploration
+
     @torch.no_grad()
     def _evaluate(self, state):
         moves=state.legal_moves()
@@ -34,7 +41,7 @@ class MCTS:
             while node.children:
                 total=max(1,node.visits)
                 move,child=max(node.children.items(),
-                    key=lambda kv: kv[1].q + self.c_puct*kv[1].prior*math.sqrt(total)/(1+kv[1].visits))
+                    key=lambda kv: self._selection_score(kv[1], total, self.c_puct))
                 node=child; path.append(node)
                 if node.state.winner is not None or node.state.draw: break
             if node.state.winner is not None:
