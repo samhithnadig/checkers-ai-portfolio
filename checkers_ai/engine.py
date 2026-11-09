@@ -35,6 +35,13 @@ class GameState:
     draw: bool = False
     history: dict[tuple, int] | None = None
 
+    def __post_init__(self):
+        # The current position is already occurrence one, including for
+        # custom positions constructed directly by callers.
+        if self.history is None:
+            self.history = {}
+        self.history.setdefault(self.position_key(), 1)
+
     @classmethod
     def initial(cls):
         b = np.zeros((8, 8), dtype=np.int8)
@@ -72,7 +79,6 @@ class GameState:
         self.no_progress = 0 if move.is_capture or promoted else self.no_progress + 1
         self.turn = -self.turn
         key = self.position_key()
-        if self.history is None: self.history = {}
         self.history[key] = self.history.get(key, 0) + 1
         red_count = int(np.sum(self.board > 0))
         black_count = int(np.sum(self.board < 0))
