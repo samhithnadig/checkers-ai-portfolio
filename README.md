@@ -70,5 +70,4 @@ checkers-ai-portfolio/
 └── scripts/
 ```
 
-## Honest portfolio claims
-Once you have run the experiments, report actual results: games trained, hardware, wall-clock time, win/draw/loss rates, and baseline comparison. Do not claim the model is strong until it beats a meaningful baseline over a sufficiently large match set.
+
