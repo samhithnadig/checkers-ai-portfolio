@@ -1,3 +1,5 @@
+> [!WARNING]
+> 🚧 **Work in progress.** The engine and alpha-beta baseline are done. Self-play training and evaluation are still underway, and results will be added soon
 # Checkers AI: From Rules Engine to Self-Play Learning
 
 A portfolio project that builds an English draughts (American checkers) engine, compares classical agents, and trains a small policy/value neural network through self-play.
